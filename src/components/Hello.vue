@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import timeFrame from './timeFrame';
+import timeFrame from 'vue-time-quantum';
 var dataFather=[
         {Week:0,
             name:'星期一',
