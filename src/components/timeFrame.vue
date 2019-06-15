@@ -7,17 +7,17 @@
             <thead class="calendar-head">
                 <tr>
                     <th rowspan="2" class="calendar-head-title" colspan="2">星期/时间</th>
-                    <th colspan="24">上午{{message}}</th>
+                    <th colspan="24">上午</th>
                     <th colspan="24">下午</th>
                 </tr>
                 <tr >
-                    <td colspan="2" v-for="item in thead">{{item}}</td>    
+                    <td colspan="2" v-for="(item, index) in thead" :key="index">{{item}}</td>    
                 </tr>
             </thead>
             <tbody class="calendar-body">
-                <tr v-for="item in timeBucket" >
+                <tr v-for="(item, index) in timeBucket" :key="index">
                     <td colspan="2" onselectstart="return false" ondragstart="return false">{{item.name}}</td>
-                    <td v-for="data in item.time" :data-week="item.Week" :data-time="data.time" v-on:mouseup="mouseUp" v-on:mousemove="mouseMove"  class="calendar-time-color" v-on:click="addColor" :class="{selectTime:data.show}" v-on:mousedown="mouseDown"></td>
+                    <td v-for="(data, index) in item.time" :data-week="item.Week" :data-time="data.time" v-on:mouseup="mouseUp" v-on:mousemove="mouseMove"  class="calendar-time-color" v-on:click="addColor" :class="{selectTime:data.show}" v-on:mousedown="mouseDown" :key="index"></td>
                 </tr>
             </tbody>
         </table>
@@ -26,9 +26,9 @@
         <span class="calendar-weekTime-cancel" v-on:click="reseting">撤销所有惭怍</span>
          <span @click="kan">查看元素</span>
         <ul>
-            <li v-show="item.Time.length>0" v-for="item in weekList">
+            <li v-show="item.Time.length>0" v-for="(item, index) in weekList" :key="index">
                 <span>{{item.name}}:</span>
-                <span class="timeList" v-for="time in item.Time" >
+                <span class="timeList" v-for="(time, index) in item.Time" :key="index">
                     <span :data-show="time.show">
                         <time>{{time.start}}</time>~<time>{{time.end}}</time>
                         <span class="del" v-show="time.show==1">×</span>
@@ -71,16 +71,11 @@ var data=[
         }
     ]
 export default{
-
     props:{
         timeBucket1:{
             type:Array,
             default:data
         },
-        message:{
-            type:String,
-            default:'111'
-        }
     },
     created(){
     
@@ -379,8 +374,8 @@ li{
 table{
     display: table;
     -webkit-user-select:none;/* and add the CSS class here instead */ 
--ms-user-select:none; 
-user-select:none;/**禁止选中文字*/ 
+    -ms-user-select:none; 
+    user-select:none;/**禁止选中文字*/ 
 }
 td,th{
     display: table-cell;
@@ -403,6 +398,7 @@ td,th{
 }
 .calendar{
     position: relative;
+    margin-bottom: 10px;
 }
 .calendar-table{
     border-collapse: collapse;
@@ -446,6 +442,7 @@ td,th{
 
 }
 .calendar-weekTime{
+   margin-top: 10px;
    font-size: 12px;
    line-height: 2em;
    max-width: 640px;
