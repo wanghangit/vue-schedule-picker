@@ -1,13 +1,16 @@
 # vue时间选择控件
 
-> 基于vue的时间选择器
+> 基于vue的时间选择器 https://wanghangit.github.io/vueTimePicker/index.html#/
 支持正选和反选
 
 ## How to use
-    npm install vue-time-quantum
+
+npm install vue-time-quantum
+
 ```html
   <timeFrame :time-bucket1="data" ></timeFrame>
 ```
+
 ```js
     components:{
         timeFrame
@@ -43,6 +46,7 @@
         }
     ]
 ```
+
 ![image](https://github.com/wanghangit/vue-timePicker/raw/master/img/1.png)
 ![image](https://github.com/wanghangit/vue-timePicker/raw/master/img/2.png)
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+

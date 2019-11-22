@@ -24,7 +24,7 @@
     </div>
     <div class="calendar-weekTime">
         <span class="calendar-weekTime-cancel" v-on:click="reseting">撤销所有惭怍</span>
-         <span @click="kan">查看元素</span>
+        <span @click="kan">查看元素</span>
         <ul>
             <li v-show="item.Time.length>0" v-for="(item, index) in weekList" :key="index">
                 <span>{{item.name}}:</span>
