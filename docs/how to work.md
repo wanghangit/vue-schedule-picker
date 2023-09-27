@@ -21,3 +21,6 @@ mousedown、mousemove、mouseup三个事件与click事件冲突，如果在移�
 
 ## 小数精度的问题
 
+## 框选范围如何限制
+由于使用table实现的
+

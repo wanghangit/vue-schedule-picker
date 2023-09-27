@@ -18,6 +18,7 @@ interface IRange {
 interface ITdItem{
     width: number;
     height: number;
+    maxHIndex: number;
 }
 
 interface ISelectedItem {
