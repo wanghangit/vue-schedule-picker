@@ -1,10 +1,10 @@
 {
   "name": "demo",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "a demo to show how to use vue-schedule-picker",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",

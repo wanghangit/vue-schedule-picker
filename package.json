@@ -1,8 +1,9 @@
 {
   "name": "vue-schedule-picker-monorepo",
-  "version": "2.0.0",
+  "version": "2.0.4",
   "scripts": {
     "dev": "pnpm run --filter=demo dev",
-    "build": "pnpm run --filter=vue-schedule-picker build"
+    "build": "pnpm run --filter=vue-schedule-picker build",
+    "build:demo": "pnpm run --filter=demo build"
   }
 }

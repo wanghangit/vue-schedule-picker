@@ -1,0 +1,6 @@
+node_modules
+vite.config.ts
+vitest.config.ts
+src/
+index.html
+
