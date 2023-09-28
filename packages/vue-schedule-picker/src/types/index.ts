@@ -1,27 +1,32 @@
-interface ITime {
+export interface ITime {
     forenoon: number;
     afternoon: number;
 }
 
-interface IPosition {
+export interface IPosition {
     x: number;
     y: number;
 }
 
-interface IRange {
+export interface IRange {
     lt: IPosition;
     lb: IPosition;
     rt: IPosition;
     rb: IPosition;
 }
 
-interface ITdItem{
+export interface ITdItem{
     width: number;
     height: number;
     maxHIndex: number;
 }
 
-interface ISelectedItem {
+export interface ISelectedItem {
     dIndex: number;
     hIndex: number;
+}
+
+export interface ITimeDisplay {
+    name: string;
+    selectedTime: Array<boolean>;
 }

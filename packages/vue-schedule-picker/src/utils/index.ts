@@ -1,3 +1,5 @@
+import type { ITdItem, IRange, ISelectedItem, ITime, IPosition } from '../types';
+
 function generateArray<T>(length: number, strategy: (i: number) => T) {
     return Array.from({ length }, (_, i) => strategy(i));
 }
@@ -16,51 +18,6 @@ export function isValidateClick(range: IRange, position: IPosition) {
     const { x: minX, y: minY } = lt;
     const { x: maxX, y: maxY } = rb;
     return x >= minX && x <= maxX && y >= minY && y <= maxY;
-}
-
-export function getStartIndexFromPosition(range: IRange, position: IPosition, item: ITdItem): ISelectedItem | null {
-    // 非法点击直接返回null
-    if (!isValidateClick(range, position)) {
-        return null;
-    }
-    const { width, height } = item;
-    const { x, y } = position;
-    const { lt } = range;
-    const { x: minX, y: minY } = lt;
-    const spaceX = x - minX;
-    const spaceY = y - minY;
-    return {
-        dIndex: normalizeIndex(spaceY / height),
-        hIndex: normalizeIndex(spaceX / width)
-    }
-}
-
-export function getEndIndexFromPosition(range: IRange, position: IPosition, item: ITdItem): ISelectedItem {
-    const { width, height, maxHIndex } = item;
-    const { x, y } = position;
-    const { lt, rb } = range;
-    const { x: minX, y: minY } = lt;
-    const { x: maxX, y: maxY } = rb;
-    const spaceX = x - minX;
-    const spaceY = y - minY;
-    let dIndex = normalizeIndex(spaceY / height);
-    let hIndex = normalizeIndex(spaceX / width);
-    if (!isValidateClick(range, position)) {
-        if (x > maxX) {
-            hIndex = maxHIndex;
-        } else if (x < minX) {
-            hIndex = 0;
-        }
-        if (y > maxY) {
-            dIndex = 6;
-        } else if (y < minY) {
-            dIndex = 0;
-        }
-    }
-    return {
-        dIndex,
-        hIndex
-    }
 }
 
 export function normalizeIndex(num: number) {
@@ -106,4 +63,23 @@ export function generatePreviewTime(selectedTime: Array<boolean>, unit: number):
         collect();
     }
     return result.map((item) => displayTimeRange(item, unit));
+}
+
+/**
+ * 检测当前位上的数字是否是1
+ * @param num 
+ * @param index 
+ */
+export function hasBit(num: number, index: number) {
+    return (num & (1 << index)) !== 0;
+}
+
+/**
+ * 反转二进制当前位上的1
+ * @param num 
+ * @param index 
+ * @returns 
+ */
+export function reverseBit(num: number, index: number) {
+    return num ^ (1 << index);
 }

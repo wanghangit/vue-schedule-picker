@@ -1,12 +1,12 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "app/**/*"],
-  "exclude": ["src/**/__tests__/*"],
+  "exclude": ["node_modules"],
+  "include": ["packages/vue-schedule-picker/src/**/*", "packages/demo/src/**/*"],
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "lib": ["ES2015", "DOM"]
   }
 }

@@ -14,7 +14,7 @@ export default defineConfig({
       entry: resolve(__dirname, './src/index.ts'),
       name: 'Schedule',
       // the proper extensions will be added
-      fileName: 'index'
+      fileName: 'dist/index.js'
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖

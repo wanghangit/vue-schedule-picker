@@ -1,52 +1,112 @@
-# vue时间选择控件
+# vue-schedule-picker
 
-> 基于vue的时间选择器 https://wanghangit.github.io/vueTimePicker/index.html#/
-支持正选和反选
+> A schedule picker component for vue3.
+Time period selection supports forward and backward selection, and supports range selection，
+
+- [vue-schedule-picker](#vue-schedule-picker)
+  - [How to use](#how-to-use)
+  - [Props](#props)
+  - [slot](#slot)
+  - [FAQ](#faq)
+
 
 ## How to use
 
-npm install vue-time-quantum
+npm install vue-schedule-picker
 
 ```html
-  <timeFrame :time-bucket1="data" ></timeFrame>
+<template>
+  <Schedule :time-bucket="data" :@change-time-bucket="changeTimeBucket" />
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue';
+import Schedule, { generateSelectedTime } from '../../vue-schedule-picker/src/index';
+
+const data = ref(generateSelectedTime());
+const changeTimeBucket = (index: number, value: ITime) => {
+  data.value[index] = value;
+}
+</script>
 ```
 
-```js
-    components:{
-        timeFrame
-    }
-    data=[
-        {Week:0,
-            name:'星期一',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        },
-        {Week:1,
-            name:'星期二',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        },
-        {Week:2,
-            name:'星期三',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-            },
-        {Week:3,
-            name:'星期四',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        },
-        {Week:4,
-            name:'星期五',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        },
-        {Week:5,
-            name:'星期六',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        },
-        {Week:6,
-            name:'星期日',
-            time:[{show:false,time:0},{show:false,time:1},{show:false,time:2},{show:false,time:3},{show:false,time:4},{show:false,time:5},{show:false,time:6},{show:false,time:7},{show:false,time:8},{show:false,time:9},{show:false,time:10},{show:false,time:11},{show:false,time:12},{show:false,time:13},{show:false,time:14},{show:false,time:15},{show:false,time:16},{show:false,time:17},{show:false,time:18},{show:false,time:19},{show:false,time:20},{show:false,time:21},{show:false,time:22},{show:false,time:23},{show:false,time:24},{show:false,time:25},{show:false,time:26},{show:false,time:27},{show:false,time:28},{show:false,time:29},{show:false,time:30},{show:false,time:31},{show:false,time:32},{show:false,time:33},{show:false,time:34},{show:false,time:35},{show:false,time:36},{show:false,time:37},{show:false,time:38},{show:false,time:39},{show:false,time:40},{show:false,time:41},{show:false,time:42},{show:false,time:43},{show:false,time:44},{show:false,time:45},{show:false,time:46},{show:false,time:47}]
-        }
-    ]
+## Props
+<details>
+<summary>time-bucket</summary>
+  <table>
+    <thead>
+      <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td>number</td>
+        <td>20</td>
+        <td>The width of the table td</td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td>number</td>
+        <td>40</td>
+        <td>The height of the table td</td>
+      </tr>
+      <tr>
+        <td><code>activeColor</code></td>
+        <td>string</td>
+        <td>rgba(48, 130, 224, 0.6)</td>
+        <td>The active color of the table td</td>
+      </tr>
+      <tr>
+        <td><code>rangeColor</code></td>
+        <td>string</td>
+        <td>rgba(100, 255, 100, 0.5)</td>
+        <td>The color of the selection range</td>
+      </tr>
+      <tr>
+        <td><code>mode</code></td>
+        <td>'hour' | 'half-hour'</td>
+        <td>'half-hour'</td>
+        <td>The mode of picker use to set unit of time period</td>
+      </tr>
+      <tr>
+        <td><code>emptyText</code></td>
+        <td>string</td>
+        <td>当前日期未选择数据</td>
+        <td>Preview component text when no data has selected</td>
+      </tr>
+      <tr>
+        <td><code>showPreview</code></td>
+        <td>boolean</td>
+        <td>true</td>
+        <td>The flag decide show Preview component</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+
+## slot
+only one slot is supported, use it to customize feature of picker.
+
+```html
+<Schedule>
+  <!--slot content-->
+  <div>
+      <button>reset</button>
+  </div>
+</Schedule>
 ```
 
-![image](https://github.com/wanghangit/vue-timePicker/raw/master/img/1.png)
-![image](https://github.com/wanghangit/vue-timePicker/raw/master/img/2.png)
+## FAQ
+1. when width and height set too large or too small, the picker will selected error（当宽度和高度设置得太大或太小时，拾取器将选择错误）
+because the table has minWidth, and maxWidth is decide by container,when you set too large the real width is not you set.
+The actual rendered width does not match the width set by props, resulting in calculation errors. This is a trade-off issue, obtaining the actual width will result in inconsistency with the setting, and currently the setting is used as the standard（因为table有minWidth，而maxWidth是由容器决定的，所以当您设置得太大时，
+实际渲染的宽度与props设置的宽度不匹配，导致计算错误。这是一个权衡问题，获得实际宽度将导致与设置不一致，目前该设置被用作标准）
+
+
+
+
 

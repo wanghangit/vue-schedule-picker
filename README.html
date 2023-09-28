@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>vue-schedule-picker</title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="vue-schedule-picker">vue-schedule-picker</h1>
+<blockquote>
+<p>A schedule picker component for vue3.
+Time period selection supports forward and backward selection, and supports range selection，</p>
+</blockquote>
+<ul>
+<li><a href="#vue-schedule-picker">vue-schedule-picker</a>
+<ul>
+<li><a href="#how-to-use">How to use</a></li>
+<li><a href="#props">Props</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-use">How to use</h2>
+<p>npm install vue-schedule-picker</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Schedule</span> <span class="hljs-attr">:time-bucket</span>=<span class="hljs-string">&quot;data&quot;</span> <span class="hljs-attr">:</span>@<span class="hljs-attr">change-time-bucket</span>=<span class="hljs-string">&quot;changeTimeBucket&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;ts&quot;</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">import</span> { ref } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Schedule</span>, { generateSelectedTime } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../vue-schedule-picker/src/index&#x27;</span>;
+
+<span class="hljs-keyword">const</span> data = <span class="hljs-title function_">ref</span>(<span class="hljs-title function_">generateSelectedTime</span>());
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">changeTimeBucket</span> = (<span class="hljs-params">index: number, value: ITime</span>) =&gt; {
+  data.<span class="hljs-property">value</span>[index] = value;
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<h2 id="props">Props</h2>
+<details>
+<summary>time-bucket</summary>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>reset()</code></td>
+      <td>Reset all state back to initial.</td>
+    </tr>
+  </tbody>
+</table>
+</details>
+
+        
+        
+    </body>
+    </html>

@@ -1,6 +1,6 @@
 <template>
   <div class="calendar">
-    <div class="schedule" ref="schedule" v-show="isShowSchedule" :style="{ background: props.rangeColor }"></div>
+    <div class="schedule" ref="schedule" v-show="isShowSchedule" :style="{ background: rangeColor }"></div>
     <table class="calendar-table" ref="calendarTable">
       <thead class="calendar-head">
         <tr>
@@ -16,33 +16,29 @@
       </thead>
       <tbody class="calendar-body">
         <tr v-for="(day, dIndex) in timeBucketDisplay" :key="dIndex">
-          <td colspan="2" onselectstart="return false" ondragstart="return false">
+          <td colspan="2">
             {{ day.name }}
           </td>
-          <td v-for="(selected, hIndex) in day.selectedTime" class="calendar-time-color"
+          <td v-for="(selected, hIndex) in day.selectedTime" class="calendar-time-color" ref="tableItem"
             :class="{ 'active-time-color': selected }"
             :style="{ width: `${width}px`, height: `${height}px`, background: selected ? props.activeColor : 'none' }"
-            :key="hIndex" :colspan="timeColSpan">
+            :key="hIndex" :colspan="timeColSpan" @mousedown="onMouseDown($event, dIndex, hIndex)" @mousemove="onMouseMove($event, dIndex, hIndex)" @mouseup="onMouseUp($event, dIndex, hIndex)">
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="calendar-preview">
-      <div v-for="day in timeBucketPreview" class="day-item">
-        <span class="day-name">{{ day.name }}</span>
-        <div class="day-selectedTime" v-for="time in day.selectedTime">
-          <span>{{ time }}</span>
-        </div>
-        <div class="day-no-selected" v-show="!day.selectedTime.length">{{ props.emptyText }}</div>
-      </div>
-    </div>
+    <!--自定义操作区-->
+    <slot></slot>
+    <Preview v-if="showPreview" :time-bucket-display="timeBucketDisplay" :empty-text="emptyText" :mode="mode" />
   </div>
 </template>
   
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, readonly, ref, watch, nextTick } from "vue";
-import { generateIncrementalArray, getEndIndexFromPosition, getStartIndexFromPosition, generatePreviewTime } from "../utils";
+import { computed, readonly, ref } from "vue";
+import Preview from "./Preview.vue";
+import { generateIncrementalArray, hasBit, reverseBit } from "../utils";
 import { ALL_HOURS, DISPLAY_DAY_MAP, HALF_HOURS_SLOT } from '../config';
+import type { ITime, IRange } from '../types';
 
 interface ITimePickerProps {
   width?: number;
@@ -50,8 +46,9 @@ interface ITimePickerProps {
   activeColor?: string;
   mode?: 'hour' | 'half-hour';
   rangeColor?: string;
-  emptyText?: string
-  timeBucket: Array<ITime>
+  emptyText?: string;
+  showPreview?: boolean;
+  timeBucket: Array<ITime>;
 }
 
 const props = withDefaults(defineProps<ITimePickerProps>(), {
@@ -60,7 +57,8 @@ const props = withDefaults(defineProps<ITimePickerProps>(), {
   activeColor: 'rgba(48, 130, 224, 0.6)',
   mode: 'half-hour',
   rangeColor: 'rgba(100, 255, 100, 0.5)',
-  emptyText: '当前日期未选择数据'
+  emptyText: '当前日期未选择数据',
+  showPreview: true,
 });
 
 const emit = defineEmits<{
@@ -83,62 +81,16 @@ const isShowSchedule = ref(false);
 // 获取框选区域的起始点
 const leftTopTime = ref();
 const calendarTable = ref<HTMLElement>();
-// 获得真实的框选区域
-const range = ref<IRange>();
-
-const initRange = () => {
-  const rect = calendarTable.value!.getBoundingClientRect();
-  const right = Math.ceil(rect.right);
-  const bottom = Math.ceil(rect.bottom);
-  const left = right - timeSlot.value * props.width;
-  const top = bottom - 7 * props.height;
-  // 生成圈选位置的区域坐标
-  range.value = {
-    lt: {
-      x: left,
-      y: top
-    },
-    lb: {
-      x: left,
-      y: bottom
-    },
-    rt: {
-      x: right,
-      y: top
-    },
-    rb: {
-      x: right,
-      y: bottom
-    }
-  }
-}
-watch([() => props.mode, () => props.width, () => props.height], () => {
-  nextTick(() => initRange());
-})
-onMounted(() => {
-  initRange();
-  document.addEventListener('mousedown', onMouseDown);
-  document.addEventListener('mouseup', onMouseUp);
-})
-
-onUnmounted(() => {
-  document.removeEventListener('mousedown', onMouseDown);
-  document.removeEventListener('mouseup', onMouseUp);
-})
 
 const timeBucketDisplay = computed(() => {
   return props.timeBucket.map((item, index) => {
     const { forenoon, afternoon } = item;
     const middle = timeSlot.value / 2;
     const forenoonSelected = generateIncrementalArray(middle).map((_, index) => {
-      // 11 && 10 为1说明第一位被选中
-      const selected = (forenoon & (1 << index)) > 0;
-      return selected;
+      return hasBit(forenoon, index);
     });
     const afternoonSelected = generateIncrementalArray(middle).map((_, index) => {
-      // 11 && 10 为1说明第一位被选中
-      const selected = (afternoon & (1 << index)) > 0;
-      return selected;
+      return hasBit(afternoon, index)
     });
     return {
       name: `星期${DISPLAY_DAY_MAP[index]}`,
@@ -147,25 +99,10 @@ const timeBucketDisplay = computed(() => {
   });
 })
 
-const timeBucketPreview = computed(() => {
-  return timeBucketDisplay.value.map((item) => {
-    return {
-      name: item.name,
-      selectedTime: generatePreviewTime(item.selectedTime, props.mode === 'hour' ? 60 : 30)
-    }
-  })
-})
-
-const onMouseUp = ($event: MouseEvent) => {
+const onMouseUp = ($event: MouseEvent, endDIndex: number, endHIndex: number) => {
   if (!isShowSchedule.value) {
     return;
   }
-  document.removeEventListener("mousemove", onMouseMove);
-  const { clientX: x, clientY: y } = $event;
-  const { width, height } = props;
-  console.log(width, height)
-  const selectedTime = getEndIndexFromPosition(range.value!, { x, y }, { width, height, maxHIndex: timeSlot.value - 1 })
-  const { dIndex: endDIndex, hIndex: endHIndex } = selectedTime;
   const { dIndex: startDIndex, hIndex: startHIndex } = leftTopTime.value;
   // 终点有可能小于起点所以要判断下大小
   const leftDIndex = Math.min(startDIndex, endDIndex);
@@ -182,8 +119,8 @@ const onMouseUp = ($event: MouseEvent) => {
   schedule.value.style.width = 0;
   schedule.value.style.height = 0;
 }
-// TODO：事件的优化
-const onMouseMove = ($event: MouseEvent) => {
+
+const onMouseMove = ($event: MouseEvent, dIndex: number, hIndex: number) => {
   $event.preventDefault();
   if (isShowSchedule.value) {
     const { clientX, clientY } = $event;
@@ -192,23 +129,12 @@ const onMouseMove = ($event: MouseEvent) => {
       `${Math.abs(clientX - leftTopTime.value.x)}px`;
     schedule.value.style.height =
       `${Math.abs(clientY - leftTopTime.value.y)}px`;
-    if (clientY < y) {
-      schedule.value.style.top = `${clientY}px`;
-    }
-    if (clientX < x) {
-      schedule.value.style.left = `${clientX}px`;
-    }
+    schedule.value.style.top = `${Math.min(clientY, y)}px`;
+    schedule.value.style.left = `${Math.min(clientX, x)}px`;
   }
 }
-const onMouseDown = ($event: MouseEvent) => {
+const onMouseDown = ($event: MouseEvent, dIndex: number, hIndex: number) => {
   const { clientX: x, clientY: y } = $event;
-  const { width, height } = props;
-  const selectedTime = getStartIndexFromPosition(range.value!, { x, y }, { width, height, maxHIndex: timeSlot.value - 1 });
-  if (!selectedTime) {
-    return;
-  }
-  document.addEventListener('mousemove', onMouseMove);
-  const { dIndex, hIndex } = selectedTime;
   leftTopTime.value = {
     dIndex,
     hIndex,
@@ -221,14 +147,18 @@ const onMouseDown = ($event: MouseEvent) => {
   schedule.value.style.top = `${y}px`;
 }
 const changeColor = (dIndex: number, hIndex: number) => {
-  console.log(dIndex, hIndex);
   const day = props.timeBucket[dIndex];
   const middle = timeSlot.value / 2;
   const newDay = { ...day }
-  if (hIndex < middle) {
-    newDay.forenoon = day.forenoon ^ (1 << hIndex);
-  } else {
-    newDay.afternoon = day.afternoon ^ (1 << (hIndex - middle));
+  try {
+    if (hIndex < middle) {
+      newDay.forenoon = reverseBit(day.forenoon, hIndex);
+    } else {
+      newDay.afternoon = reverseBit(day.afternoon, hIndex - middle);
+    }
+  } catch (error) {
+    console.log(newDay);
+    console.error(error);
   }
   emit('changeTimeBucket', dIndex, newDay);
 }
@@ -298,33 +228,6 @@ const changeColor = (dIndex: number, hIndex: number) => {
 
   .active-time-color {
     transition: background 500ms linear;
-  }
-}
-
-.calendar-preview {
-  margin-top: 20px;
-
-  .day-item {
-    display: flex;
-    margin-top: 10px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .day-name {
-      color: #333;
-    }
-
-    .day-selectedTime {
-      margin-left: 10px;
-    }
-
-    .day-no-selected {
-      margin-left: 10px;
-      color: #999;
-      font-size: 14px;
-    }
   }
 }
 
