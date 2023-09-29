@@ -10,7 +10,8 @@ Time period selection supports forward and backward selection, and supports rang
   - [FAQ](#faq)
 
 ## demo
-[demo url](https://wanghangit.github.io/vue-schedule-picker/index.html)
+![预览图](./docs/demo.png)
+preview：[demo url](https://wanghangit.github.io/vue-schedule-picker/index.html)
 
 ## How to use
 
