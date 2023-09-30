@@ -4,9 +4,9 @@
     <table class="calendar-table" ref="calendarTable">
       <thead class="calendar-head">
         <tr>
-          <th rowspan="2" class="calendar-head-title" colspan="2">星期/时间</th>
-          <th colspan="24">上午</th>
-          <th colspan="24">下午</th>
+          <th rowspan="2" class="calendar-head-title" colspan="2">{{ config.header }}</th>
+          <th colspan="24">{{ config.forenoon }}</th>
+          <th colspan="24">{{ config.afternoon }}</th>
         </tr>
         <tr>
           <td colspan="2" v-for="(item, index) in thead" :key="index">
@@ -37,7 +37,7 @@
 import { computed, readonly, ref } from "vue";
 import Preview from "./Preview.vue";
 import { generateIncrementalArray, hasBit, reverseBit } from "../utils";
-import { ALL_HOURS, DISPLAY_DAY_MAP, HALF_HOURS_SLOT } from '../config';
+import { ALL_HOURS, HALF_HOURS_SLOT, getLanguageConfig } from '../config';
 import type { ITime, IRange } from '../types';
 
 interface ITimePickerProps {
@@ -48,6 +48,7 @@ interface ITimePickerProps {
   rangeColor?: string;
   emptyText?: string;
   showPreview?: boolean;
+  language?: 'zh-cn' | 'en-us';
   timeBucket: Array<ITime>;
 }
 
@@ -59,6 +60,7 @@ const props = withDefaults(defineProps<ITimePickerProps>(), {
   rangeColor: 'rgba(100, 255, 100, 0.5)',
   emptyText: '当前日期未选择数据',
   showPreview: true,
+  language: 'zh-cn',
 });
 
 const emit = defineEmits<{
@@ -82,7 +84,12 @@ const isShowSchedule = ref(false);
 const leftTopTime = ref();
 const calendarTable = ref<HTMLElement>();
 
+const config = computed(() => {
+  return getLanguageConfig(props.language)
+})
+
 const timeBucketDisplay = computed(() => {
+  const { DISPLAY_DAY_MAP } = config.value;
   return props.timeBucket.map((item, index) => {
     const { forenoon, afternoon } = item;
     const middle = timeSlot.value / 2;
@@ -93,7 +100,7 @@ const timeBucketDisplay = computed(() => {
       return hasBit(afternoon, index)
     });
     return {
-      name: `星期${DISPLAY_DAY_MAP[index]}`,
+      name: `${DISPLAY_DAY_MAP[index]}`,
       selectedTime: forenoonSelected.concat(afternoonSelected)
     }
   });

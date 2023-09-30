@@ -1,9 +1,10 @@
 {
   "name": "vue-schedule-picker",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "module": "dist/index.js",
   "main": "dist/index.js",
   "description": "The Vue schedule selector is used to select a time period",
+  "keywords": ["vue", "component", "vue schedule component"],
   "author": {
     "name": "wanghan",
     "email": "724690450@qq.com"
@@ -35,5 +36,9 @@
   },
   "peerDependencies": {
     "vue": "^3.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wanghangit/vue-schedule-picker.git"
   }
 }
