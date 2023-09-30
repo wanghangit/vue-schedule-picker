@@ -4,13 +4,13 @@
 Time period selection supports forward and backward selection, and supports range selection，
 
 - [vue-schedule-picker](#vue-schedule-picker)
+  - [demo](#demo)
   - [How to use](#how-to-use)
   - [Props](#props)
   - [slot](#slot)
-  - [FAQ](#faq)
 
 ## demo
-![预览图](./docs/demo.png)
+![预览图](https://wanghangit.github.io/vue-schedule-picker/demo.png)
 preview：[demo url](https://wanghangit.github.io/vue-schedule-picker/index.html)
 
 ## How to use
@@ -33,6 +33,17 @@ const changeTimeBucket = (index: number, value: ITime) => {
 ```
 
 ## Props
+Using binary can reduce data transmission, and JavaScript binary operations have a 32-bit limit. We can use two numbers per day, one in the morning and one in the afternoon. This meets the security of data and can reduce data transmission. For the sake of semantics and extension, using an object to represent the selection of the day is the currently selected data structure 'ITimeBucket'`
+
+Structure of data storage
+```ts
+type ITime = {
+    forenoon: number; // 上午
+    afternoon: number; // 下午
+}
+type ITimeBucket = ITime[];
+```
+
 <details>
 <summary>time-bucket</summary>
   <table>
@@ -45,6 +56,18 @@ const changeTimeBucket = (index: number, value: ITime) => {
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><code>time-bucket</code></td>
+        <td><code>Array<ITime></code></td>
+        <td>--</td>
+        <td>data of the components</td>
+      </tr>
+      <tr>
+        <td><code>change-time-bucket</code></td>
+        <td><code>(index, value) => void</code></td>
+        <td>--</td>
+        <td>function use to change data</td>
+      </tr>
       <tr>
         <td><code>width</code></td>
         <td>number</td>
